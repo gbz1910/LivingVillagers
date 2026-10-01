@@ -19,22 +19,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Reconstruct project
+      - name: Reconstruct Stage 2 project
         shell: bash
         run: |
-          cat project.part1.b64 project.part2.b64 project.part3.b64 project.part4.b64 > project.b64
-          base64 -d project.b64 > project.zip
+          cat stage2.part1.b64 stage2.part2.b64 stage2.part3.b64 stage2.part4.b64 > stage2.b64
+          base64 -d stage2.b64 > project.zip
           mkdir project
           unzip -q project.zip -d project
-
-      - name: Apply compatibility fixes
-        shell: bash
-        run: |
-          FILE="project/src/main/java/com/gb/livingvillagers/command/LivingVillagersCommands.java"
-          sed -i 's/private static int setProfession(CommandContext<CommandSourceStack> context) {/private static int setProfession(CommandContext<CommandSourceStack> context) throws com.mojang.brigadier.exceptions.CommandSyntaxException {/' "$FILE"
-          sed -i 's/private static int showInfo(CommandContext<CommandSourceStack> context) {/private static int showInfo(CommandContext<CommandSourceStack> context) throws com.mojang.brigadier.exceptions.CommandSyntaxException {/' "$FILE"
-          sed -i 's/forge_version=47.4.10/forge_version=47.4.0/' project/gradle.properties
-          sed -i 's/forge_version_range=\[47.4.10,48)/forge_version_range=[47.4.0,48)/' project/gradle.properties
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -48,5 +39,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-forge-47.4.0
+          name: LivingVillagers-1.20.1-Stage2
           path: project/build/libs/*.jar
