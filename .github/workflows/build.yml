@@ -1,4 +1,4 @@
-name: Build Living Villagers Stage 2.4 alpha.11
+name: Build Living Villagers alpha.15 renderer fix
 
 on:
   workflow_dispatch:
@@ -27,10 +27,16 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
-      - name: Fix Minecraft 1.20.1 Heightmap import
+      - name: Apply alpha.15 renderer fix
         shell: bash
         run: |
-          sed -i 's/import net.minecraft.world.level.Heightmap;/import net.minecraft.world.level.levelgen.Heightmap;/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
+          mkdir -p project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render
+          cp patches/a15_MinerAwareVillagerModel.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/MinerAwareVillagerModel.java
+          cp patches/a15_LivingVillagerRenderer.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/LivingVillagerRenderer.java
+          cp patches/a15_ClientModEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/ClientModEvents.java
+          printf '{\n  "villager": {\n    "hat": "partial"\n  }\n}\n' > project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta
+          cp project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/zombie_villager/profession/miner.png.mcmeta
+          sed -i 's/mod_version=0.2.1-alpha.11/mod_version=0.2.1-alpha.15/' project/lv_stage22/gradle.properties
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -44,5 +50,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-Stage2.4-alpha.11
+          name: LivingVillagers-1.20.1-alpha.15
           path: project/lv_stage22/build/libs/*.jar
