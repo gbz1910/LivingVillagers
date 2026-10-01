@@ -27,6 +27,12 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
+      - name: Apply alpha.4 crash fix
+        shell: bash
+        run: |
+          sed -i 's/Blocks.BLAST_FURNACE/Blocks.SMITHING_TABLE/g' project/src/main/java/com/gb/livingvillagers/registry/ModBlocks.java
+          sed -i 's/mod_version=0.2.1-alpha.3/mod_version=0.2.1-alpha.4/g' project/gradle.properties
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
