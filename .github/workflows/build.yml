@@ -1,4 +1,4 @@
-name: Build Living Villagers Stage 2.2 alpha.6
+name: Build Living Villagers Stage 2.2 alpha.7
 
 on:
   workflow_dispatch:
@@ -19,11 +19,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Reconstruct alpha.6 project
+      - name: Reconstruct alpha.7 project
         shell: bash
         run: |
-          cat stage22a6.part1.b64 stage22a6.part2.b64 stage22a6.part3.b64 stage22a6.part4.b64 stage22a6.part5.b64 stage22a6.part6.b64 > stage22a6.b64
-          base64 -d stage22a6.b64 > project.zip
+          cat stage22a7.part1.b64 stage22a7.part2.b64 stage22a7.part3.b64 stage22a7.part4.b64 stage22a7.part5.b64 stage22a7.part6.b64 stage22a7.part7.b64 > stage22a7.b64
+          base64 -d stage22a7.b64 > project.zip
           mkdir project
           unzip -q project.zip -d project
 
@@ -39,5 +39,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-Stage2.2-alpha.6
+          name: LivingVillagers-1.20.1-Stage2.2-alpha.7
           path: project/lv_stage22/build/libs/*.jar
