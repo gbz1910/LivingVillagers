@@ -19,21 +19,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Reconstruct Stage 2 project
+      - name: Reconstruct Stage 2.1 project
         shell: bash
         run: |
-          cat stage2.part1.b64 stage2.part2.b64 stage2.part3.b64 stage2.part4.b64 > stage2.b64
-          base64 -d stage2.b64 > project.zip
+          cat stage21.part1.b64 stage21.part2.b64 stage21.part3.b64 stage21.part4.b64 stage21.part5.b64 > stage21.b64
+          base64 -d stage21.b64 > project.zip
           mkdir project
           unzip -q project.zip -d project
-
-      - name: Apply 1.20.1 source fixes
-        shell: bash
-        run: |
-          FILE="project/src/main/java/com/gb/livingvillagers/util/WorkerProfessionVisuals.java"
-          sed -i '/import net.minecraft.world.entity.npc.VillagerProfessions;/d' "$FILE"
-          sed -i 's/VillagerProfessions\.NONE/VillagerProfession.NONE/g' "$FILE"
-          sed -i 's/VillagerProfessions\.FARMER/VillagerProfession.FARMER/g' "$FILE"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -47,5 +39,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-Stage2
+          name: LivingVillagers-1.20.1-Stage2.1
           path: project/build/libs/*.jar
