@@ -27,6 +27,14 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
+      - name: Apply 1.20.1 source fixes
+        shell: bash
+        run: |
+          FILE="project/src/main/java/com/gb/livingvillagers/util/WorkerProfessionVisuals.java"
+          sed -i '/import net.minecraft.world.entity.npc.VillagerProfessions;/d' "$FILE"
+          sed -i 's/VillagerProfessions\.NONE/VillagerProfession.NONE/g' "$FILE"
+          sed -i 's/VillagerProfessions\.FARMER/VillagerProfession.FARMER/g' "$FILE"
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
