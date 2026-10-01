@@ -1,4 +1,4 @@
-name: Build Living Villagers Stage 2.2 alpha.9
+name: Build Living Villagers Stage 2.3 alpha.10
 
 on:
   workflow_dispatch:
@@ -27,18 +27,22 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
-      - name: Apply alpha.9 patches
+      - name: Apply alpha.10 patches
         shell: bash
         run: |
-          cp patches/WorkerTaskManager.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
-          cp patches/WorkerTaskExecutor.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
+          cp patches/a10_WorkerTaskManager.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
+          cp patches/a10_WorkerTaskExecutor.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
+          cp patches/a10_WorkerWorldSearch.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerWorldSearch.java
+          cp patches/a10_WorkerRuntime.java project/lv_stage22/src/main/java/com/gb/livingvillagers/task/runtime/WorkerRuntime.java
+          cp patches/a10_MinerTradeEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/MinerTradeEvents.java
+          cp patches/a10_LivingVillagers.java project/lv_stage22/src/main/java/com/gb/livingvillagers/LivingVillagers.java
           cp patches/VillagerWorkEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/VillagerWorkEvents.java
           base64 -d patches/miner.png.b64 > project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png
           cp project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/zombie_villager/profession/miner.png
           printf '{\n  "villager": {\n    "hat": "full"\n  }\n}\n' > project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta
           cp project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/zombie_villager/profession/miner.png.mcmeta
-          sed -i 's/mod_version=0.2.1-alpha.7/mod_version=0.2.1-alpha.9/' project/lv_stage22/gradle.properties
-          sed -i 's/mod_version=0.2.2-alpha.7/mod_version=0.2.1-alpha.9/' project/lv_stage22/gradle.properties
+          sed -i 's/mod_version=0.2.1-alpha.7/mod_version=0.2.1-alpha.10/' project/lv_stage22/gradle.properties
+          sed -i 's/mod_version=0.2.2-alpha.7/mod_version=0.2.1-alpha.10/' project/lv_stage22/gradle.properties
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -52,5 +56,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-Stage2.2-alpha.9
+          name: LivingVillagers-1.20.1-Stage2.3-alpha.10
           path: project/lv_stage22/build/libs/*.jar
