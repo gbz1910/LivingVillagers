@@ -27,6 +27,11 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
+      - name: Fix Minecraft 1.20.1 Heightmap import
+        shell: bash
+        run: |
+          sed -i 's/import net.minecraft.world.level.Heightmap;/import net.minecraft.world.level.levelgen.Heightmap;/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
