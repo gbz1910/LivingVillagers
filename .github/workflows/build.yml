@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.21 pillar and settings
+name: Build Living Villagers alpha.22 remove village chest
 
 on:
   workflow_dispatch:
@@ -32,19 +32,21 @@ jobs:
           sed -i 's/placed.sort(Comparator.comparingInt(BlockPos::getY).reversed());/placed.sort((a, b) -> Integer.compare(b.getY(), a.getY()));/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
           cp patches/a19_LumberjackCompatibilityEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/LumberjackCompatibilityEvents.java
 
-      - name: Apply alpha.20 village chest
-        shell: bash
-        run: |
-          cat a20.patch.part000.b64 > a20_patch.b64
-          base64 -d a20_patch.b64 > a20_patch.tar.gz
-          tar -xzf a20_patch.tar.gz -C project/lv_stage22
-
       - name: Apply alpha.21 pillar and settings overhaul
         shell: bash
         run: |
           cat a21.patch.part000.b64 a21.patch.part001.b64 > a21_patch.b64
           base64 -d a21_patch.b64 > a21_patch.tar.gz
           tar -xzf a21_patch.tar.gz -C project/lv_stage22
+          sed -i 's/mod_version=0.2.1-alpha.21/mod_version=0.2.1-alpha.22/' project/lv_stage22/gradle.properties
+
+      - name: Verify village chest and key are absent
+        shell: bash
+        run: |
+          if grep -R -n -E 'VILLAGE_CHEST|VILLAGE_KEY|village_chest|village_key|VillageChest|VillageKey' project/lv_stage22/src/main 2>/dev/null; then
+            echo "Village chest/key remnants found."
+            exit 1
+          fi
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -58,5 +60,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.21
+          name: LivingVillagers-1.20.1-alpha.22
           path: project/lv_stage22/build/libs/*.jar
