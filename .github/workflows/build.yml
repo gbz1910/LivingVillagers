@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.23 pillar rewrite
+name: Build Living Villagers alpha.24 connected tree chopping
 
 on:
   workflow_dispatch:
@@ -39,14 +39,12 @@ jobs:
           base64 -d a21_patch.b64 > a21_patch.tar.gz
           tar -xzf a21_patch.tar.gz -C project/lv_stage22
 
-      - name: Apply alpha.23 pillar rewrite
+      - name: Apply alpha.24 connected-tree rewrite
         shell: bash
         run: |
-          cp patches/a23_WorkerTaskManager.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
-          cp patches/a23_WorkerTaskExecutor.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
-          cp patches/a23_WorkerRuntime.java project/lv_stage22/src/main/java/com/gb/livingvillagers/task/runtime/WorkerRuntime.java
-          cp patches/a23_VillagerWorkEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/VillagerWorkEvents.java
-          sed -i 's/mod_version=0.2.1-alpha.21/mod_version=0.2.1-alpha.23/' project/lv_stage22/gradle.properties
+          base64 -d a24.patch.b64 > a24_patch.tar.gz
+          tar -xzf a24_patch.tar.gz -C project/lv_stage22
+          sed -i 's/mod_version=0.2.1-alpha.21/mod_version=0.2.1-alpha.24/' project/lv_stage22/gradle.properties
 
       - name: Remove old village chest translations
         shell: bash
@@ -67,11 +65,15 @@ jobs:
               p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           PY
 
-      - name: Verify village chest and key are absent
+      - name: Verify removed systems stay removed
         shell: bash
         run: |
           if grep -R -n -E 'VILLAGE_CHEST|VILLAGE_KEY|village_chest|village_key|VillageChest|VillageKey' project/lv_stage22/src/main 2>/dev/null; then
             echo "Village chest/key remnants found."
+            exit 1
+          fi
+          if grep -R -n -E 'raiseLumberjackWithDirt|finishCurrentLumberjackPillar|cleanupLumberjackScaffold|hasScaffoldBlocks|cutting_from_pillar|starting_dirt_pillar|climbing_dirt_pillar' project/lv_stage22/src/main/java 2>/dev/null; then
+            echo "Old lumberjack pillar logic still present."
             exit 1
           fi
 
@@ -87,5 +89,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.23
+          name: LivingVillagers-1.20.1-alpha.24
           path: project/lv_stage22/build/libs/*.jar
