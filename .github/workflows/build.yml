@@ -40,6 +40,25 @@ jobs:
           tar -xzf a21_patch.tar.gz -C project/lv_stage22
           sed -i 's/mod_version=0.2.1-alpha.21/mod_version=0.2.1-alpha.22/' project/lv_stage22/gradle.properties
 
+      - name: Remove old village chest translations
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ("pt_br.json", "en_us.json"):
+              p = Path("project/lv_stage22/src/main/resources/assets/livingvillagers/lang") / name
+              data = json.loads(p.read_text(encoding="utf-8"))
+              for key in (
+                  "block.livingvillagers.village_chest",
+                  "item.livingvillagers.village_key",
+                  "container.livingvillagers.village_chest",
+                  "message.livingvillagers.village_chest_locked",
+              ):
+                  data.pop(key, None)
+              p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
+
       - name: Verify village chest and key are absent
         shell: bash
         run: |
