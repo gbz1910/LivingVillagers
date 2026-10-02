@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.17 head fix
+name: Build Living Villagers alpha.18 lumberjack
 
 on:
   workflow_dispatch:
@@ -19,28 +19,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Reconstruct alpha.11 project
+      - name: Reconstruct alpha.18 project
         shell: bash
         run: |
-          cat stage11.part{000..044}.b64 > stage11.b64
-          base64 -d stage11.b64 > project.zip
+          cat a18.part{000..012}.b64 > a18.b64
+          base64 -d a18.b64 > project.zip
           mkdir project
           unzip -q project.zip -d project
-
-      - name: Apply alpha.17 head fix
-        shell: bash
-        run: |
-          mkdir -p project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render
-          cp patches/a17_MinerAwareVillagerModel.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/MinerAwareVillagerModel.java
-          cp patches/a17_LivingVillagerRenderer.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/LivingVillagerRenderer.java
-          cp patches/a17_ClientModEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/ClientModEvents.java
-          rm -f project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/MinerIronHelmetModel.java
-          rm -f project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/MinerIronHelmetLayer.java
-          rm -f project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/miner_iron_helmet.png
-          printf '{\n  "villager": {\n    "hat": "partial"\n  }\n}\n' > project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta
-          cp project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/zombie_villager/profession/miner.png.mcmeta
-          sed -i 's/mod_version=0.2.1-alpha.11/mod_version=0.2.1-alpha.17/' project/lv_stage22/gradle.properties
-          sed -i 's/import net.minecraft.world.level.Heightmap;/import net.minecraft.world.level.levelgen.Heightmap;/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -54,5 +39,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.17
+          name: LivingVillagers-1.20.1-alpha.18
           path: project/lv_stage22/build/libs/*.jar
