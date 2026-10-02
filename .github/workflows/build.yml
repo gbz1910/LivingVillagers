@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.15 renderer fix
+name: Build Living Villagers alpha.16 iron helmet
 
 on:
   workflow_dispatch:
@@ -27,16 +27,18 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
-      - name: Apply alpha.15 renderer fix
+      - name: Apply alpha.16 iron helmet
         shell: bash
         run: |
           mkdir -p project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render
+          mkdir -p project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager
           cp patches/a15_MinerAwareVillagerModel.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/MinerAwareVillagerModel.java
-          cp patches/a15_LivingVillagerRenderer.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/LivingVillagerRenderer.java
-          cp patches/a15_ClientModEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/ClientModEvents.java
-          printf '{\n  "villager": {\n    "hat": "partial"\n  }\n}\n' > project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta
-          cp project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/profession/miner.png.mcmeta project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/zombie_villager/profession/miner.png.mcmeta
-          sed -i 's/mod_version=0.2.1-alpha.11/mod_version=0.2.1-alpha.15/' project/lv_stage22/gradle.properties
+          cp patches/a16_MinerIronHelmetModel.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/MinerIronHelmetModel.java
+          cp patches/a16_MinerIronHelmetLayer.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/MinerIronHelmetLayer.java
+          cp patches/a16_LivingVillagerRenderer.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/render/LivingVillagerRenderer.java
+          cp patches/a16_ClientModEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/client/ClientModEvents.java
+          echo 'iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAASUExURcjN0XuBhq60uY+Vmrm+wv///z31cpYAAAABYktHRAX4b+nHAAAAB3RJTUUH6goCFQUmLiVSTQAAAClJREFUSMdjYBgFYCBIAIwUBUoEwKiCkaXAmAAYVTCyFLgQAKMKRpQCAKIoQxAf0PxpAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDI2LTEwLTAyVDIxOjA1OjM4KzAwOjAw+xu9vwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyNi0xMC0wMlQyMTowNTozOCswMDowMIpGBQMAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjYtMTAtMDJUMjE6MDU6MzgrMDA6MDDdUyTcAAAAAElFTkSuQmCC' | base64 -d > project/lv_stage22/src/main/resources/assets/livingvillagers/textures/entity/villager/miner_iron_helmet.png
+          sed -i 's/mod_version=0.2.1-alpha.11/mod_version=0.2.1-alpha.16/' project/lv_stage22/gradle.properties
           sed -i 's/import net.minecraft.world.level.Heightmap;/import net.minecraft.world.level.levelgen.Heightmap;/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
 
       - name: Setup Gradle
@@ -51,5 +53,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.15
+          name: LivingVillagers-1.20.1-alpha.16
           path: project/lv_stage22/build/libs/*.jar
