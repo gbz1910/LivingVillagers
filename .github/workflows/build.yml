@@ -27,6 +27,11 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
+      - name: Apply alpha.18 compile fix
+        shell: bash
+        run: |
+          sed -i 's/placed.sort(Comparator.comparingInt(BlockPos::getY).reversed());/placed.sort((a, b) -> Integer.compare(b.getY(), a.getY()));/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
