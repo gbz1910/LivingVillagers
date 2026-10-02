@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.20 village chest
+name: Build Living Villagers alpha.21 pillar and settings
 
 on:
   workflow_dispatch:
@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,7 +26,7 @@ jobs:
           mkdir project
           unzip -q project.zip -d project
 
-      - name: Apply alpha.19 compatibility fixes
+      - name: Apply alpha.19 fixes
         shell: bash
         run: |
           sed -i 's/placed.sort(Comparator.comparingInt(BlockPos::getY).reversed());/placed.sort((a, b) -> Integer.compare(b.getY(), a.getY()));/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
@@ -39,6 +38,13 @@ jobs:
           cat a20.patch.part000.b64 > a20_patch.b64
           base64 -d a20_patch.b64 > a20_patch.tar.gz
           tar -xzf a20_patch.tar.gz -C project/lv_stage22
+
+      - name: Apply alpha.21 pillar and settings overhaul
+        shell: bash
+        run: |
+          cat a21.patch.part000.b64 a21.patch.part001.b64 > a21_patch.b64
+          base64 -d a21_patch.b64 > a21_patch.tar.gz
+          tar -xzf a21_patch.tar.gz -C project/lv_stage22
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -52,5 +58,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.20
+          name: LivingVillagers-1.20.1-alpha.21
           path: project/lv_stage22/build/libs/*.jar
