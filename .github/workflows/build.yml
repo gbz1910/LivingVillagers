@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.22 remove village chest
+name: Build Living Villagers alpha.23 pillar rewrite
 
 on:
   workflow_dispatch:
@@ -32,13 +32,21 @@ jobs:
           sed -i 's/placed.sort(Comparator.comparingInt(BlockPos::getY).reversed());/placed.sort((a, b) -> Integer.compare(b.getY(), a.getY()));/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
           cp patches/a19_LumberjackCompatibilityEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/LumberjackCompatibilityEvents.java
 
-      - name: Apply alpha.21 pillar and settings overhaul
+      - name: Apply alpha.21 settings overhaul
         shell: bash
         run: |
           cat a21.patch.part000.b64 a21.patch.part001.b64 > a21_patch.b64
           base64 -d a21_patch.b64 > a21_patch.tar.gz
           tar -xzf a21_patch.tar.gz -C project/lv_stage22
-          sed -i 's/mod_version=0.2.1-alpha.21/mod_version=0.2.1-alpha.22/' project/lv_stage22/gradle.properties
+
+      - name: Apply alpha.23 pillar rewrite
+        shell: bash
+        run: |
+          cp patches/a23_WorkerTaskManager.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskManager.java
+          cp patches/a23_WorkerTaskExecutor.java project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
+          cp patches/a23_WorkerRuntime.java project/lv_stage22/src/main/java/com/gb/livingvillagers/task/runtime/WorkerRuntime.java
+          cp patches/a23_VillagerWorkEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/VillagerWorkEvents.java
+          sed -i 's/mod_version=0.2.1-alpha.21/mod_version=0.2.1-alpha.23/' project/lv_stage22/gradle.properties
 
       - name: Remove old village chest translations
         shell: bash
@@ -79,5 +87,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.22
+          name: LivingVillagers-1.20.1-alpha.23
           path: project/lv_stage22/build/libs/*.jar
