@@ -12,9 +12,9 @@
 - Java do build: **17**
 - Gradle usado no GitHub Actions: **8.8**
 - Mod ID: `livingvillagers`
-- Versão atual deste snapshot: **0.2.1-alpha.24**
+- Versão atual deste snapshot: **0.2.1-alpha.25**
 - Commit deste snapshot: `925fdddf4c018f682b3fbebea5006a160f5920fe`
-- Build alpha.24: **GitHub Actions concluído com sucesso**
+- Build alpha.25: **GitHub Actions concluído com sucesso**
 
 ## 2. Regra de trabalho
 
@@ -419,7 +419,7 @@ Continuar incrementando as alphas:
 - alpha.21 → novo sistema de configurações + tentativa de pilar;
 - alpha.22 → remoção total do Baú da Vila/Chave;
 - alpha.23 → tentativa final de estabilizar pilar;
-- alpha.24 → **pilares removidos e substituídos por corte inteligente de árvore conectada**.
+- alpha.24 → **pilares removidos e substituídos por corte inteligente de árvore conectada**.\n- alpha.25 → correção do travamento em `TRAVEL_TO_TASK`, recuperação automática de alvo e coleta de drops estabilizada.
 
 Ao criar a próxima build, continuar em **alpha.25**, salvo decisão explícita diferente.
 
@@ -452,10 +452,10 @@ Faça primeiro:
 
 ### Próximo ponto de continuação
 
-Estado atual: **alpha.24 compilada com sucesso**.
+Estado atual: **alpha.25 compilada com sucesso**.
 
 A mudança principal mais recente é:
 
-**Lenhador sem pilares → corte inteligente da árvore conectada + coleta física de drops após terminar.**
+**Lenhador sem pilares → corte inteligente da árvore conectada + recuperação automática de TRAVEL_TO_TASK + coleta de drops pela base da árvore.**
 
 A próxima versão deve partir daqui.
