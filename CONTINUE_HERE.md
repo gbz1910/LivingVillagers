@@ -12,9 +12,9 @@
 - Java do build: **17**
 - Gradle usado no GitHub Actions: **8.8**
 - Mod ID: `livingvillagers`
-- Versão atual deste snapshot: **0.2.1-alpha.26.1**
+- Versão atual deste snapshot: **0.2.1-alpha.26.2**
 - Commit deste snapshot: `d00a9d598ca295a8b989b847e071d7d857ebd921`
-- Build alpha.26.1: **GitHub Actions concluído com sucesso**
+- Build alpha.26.2: **GitHub Actions concluído com sucesso**
 
 ## 2. Regra de trabalho
 
@@ -449,8 +449,9 @@ Continuar incrementando as alphas:
 - alpha.25 → correção do travamento em `TRAVEL_TO_TASK`, recuperação automática de alvo e coleta de drops estabilizada.
 - alpha.26 → Minerador com exploração de cavernas sem X-Ray, linha de visão para minérios, lampião visível com iluminação móvel, fuga acelerada de Zombies/Pillagers e limites diários configuráveis por profissão.
 - alpha.26.1 → corrige a orientação do lampião e substitui a patrulha aleatória do Minerador por exploração de cavernas com detecção de entrada, checkpoints visitados, mineração apenas de minérios realmente visíveis e retorno para casa ao esgotar a caverna.
+- alpha.26.2 → corrige persistência das configurações avançadas, fuga direcionada para casa e travamento em GET_REQUIRED_ITEMS.
 
-Ao criar a próxima build, continuar em **alpha.26.1**, salvo decisão explícita diferente.
+Ao criar a próxima build, continuar em **alpha.26.2**, salvo decisão explícita diferente.
 
 ## 20. Antes de responder em outro chat
 
@@ -481,7 +482,7 @@ Faça primeiro:
 
 ### Próximo ponto de continuação
 
-Estado atual: **alpha.26.1 compilada com sucesso**.
+Estado atual: **alpha.26.2 compilada com sucesso**.
 
 A mudança principal mais recente é:
 
