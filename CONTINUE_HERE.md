@@ -12,9 +12,9 @@
 - Java do build: **17**
 - Gradle usado no GitHub Actions: **8.8**
 - Mod ID: `livingvillagers`
-- Versão atual deste snapshot: **0.2.1-alpha.26**
-- Commit deste snapshot: `83a22f4046e059148080e99190e0373a2d5889a8`
-- Build alpha.26: **GitHub Actions concluído com sucesso**
+- Versão atual deste snapshot: **0.2.1-alpha.26.1**
+- Commit deste snapshot: `d00a9d598ca295a8b989b847e071d7d857ebd921`
+- Build alpha.26.1: **GitHub Actions concluído com sucesso**
 
 ## 2. Regra de trabalho
 
@@ -44,9 +44,12 @@ O workflow atual:
 2. aplica as correções da alpha.19;
 3. aplica o overhaul de configurações da alpha.21;
 4. aplica o patch da alpha.24;
-5. remove restos antigos do Baú da Vila/Chave da Vila;
-6. verifica que o sistema de pilares não voltou;
-7. compila com Java 17 + Gradle 8.8.
+5. aplica a recuperação de viagem/coleta da alpha.25;
+6. aplica o overhaul de exploração do Minerador da alpha.26;
+7. aplica o hotfix de cavernas/lampião da alpha.26.1;
+8. remove restos antigos do Baú da Vila/Chave da Vila;
+9. verifica que Baú/Chave e o sistema de pilares não voltaram;
+10. compila com Java 17 + Gradle 8.8.
 
 Não reintroduzir patches antigos sem entender a ordem atual.
 
@@ -123,6 +126,29 @@ Características importantes:
 - patrulha quando não encontra minério.
 
 Preservar o comportamento que já funciona antes de fazer mudanças grandes.
+
+### Hotfix alpha.26.1 — cavernas e retorno para casa
+
+A alpha.26.1 corrige dois problemas observados em jogo:
+
+- o lampião do Minerador estava renderizado de cabeça para baixo; a layer do lampião foi rotacionada sem alterar o renderer aprovado da cabeça da alpha.17;
+- a exploração antiga escolhia pontos escuros genéricos e podia deixar o Minerador andando sem objetivo perto de uma caverna.
+
+O fluxo atual do Minerador é:
+
+1. usa a memória HOME/cama como referência de casa quando disponível;
+2. procura entradas de cavernas grandes, abertas e alcançáveis perto da casa;
+3. evita entradas já marcadas como esgotadas;
+4. caminha até a entrada;
+5. explora checkpoints internos alcançáveis e guarda os pontos já visitados;
+6. durante a exploração, procura minérios expostos com linha de visão real;
+7. se encontrar minério, interrompe a exploração para minerar e coletar;
+8. se encher o inventário, deposita e pode retomar a mesma caverna;
+9. quando duas buscas consecutivas não encontram novo checkpoint útil, considera a caverna esgotada;
+10. deposita os recursos restantes e retorna para HOME/cama;
+11. se não houver caverna válida nem minério realmente visível, não inicia patrulha aleatória: volta para casa e aguarda.
+
+O Minerador não deve detectar cavernas/minérios através de paredes como um X-Ray. A entrada precisa ser uma região aberta/alcançável e os minérios continuam exigindo exposição + linha de visão.
 
 ## 7. Lenhador — estado atual alpha.24
 
@@ -422,8 +448,9 @@ Continuar incrementando as alphas:
 - alpha.24 → **pilares removidos e substituídos por corte inteligente de árvore conectada**.
 - alpha.25 → correção do travamento em `TRAVEL_TO_TASK`, recuperação automática de alvo e coleta de drops estabilizada.
 - alpha.26 → Minerador com exploração de cavernas sem X-Ray, linha de visão para minérios, lampião visível com iluminação móvel, fuga acelerada de Zombies/Pillagers e limites diários configuráveis por profissão.
+- alpha.26.1 → corrige a orientação do lampião e substitui a patrulha aleatória do Minerador por exploração de cavernas com detecção de entrada, checkpoints visitados, mineração apenas de minérios realmente visíveis e retorno para casa ao esgotar a caverna.
 
-Ao criar a próxima build, continuar em **alpha.26**, salvo decisão explícita diferente.
+Ao criar a próxima build, continuar em **alpha.26.1**, salvo decisão explícita diferente.
 
 ## 20. Antes de responder em outro chat
 
@@ -454,10 +481,10 @@ Faça primeiro:
 
 ### Próximo ponto de continuação
 
-Estado atual: **alpha.26 compilada com sucesso**.
+Estado atual: **alpha.26.1 compilada com sucesso**.
 
 A mudança principal mais recente é:
 
-**Minerador sem X-Ray → exploração de cavernas alcançáveis + minérios apenas com linha de visão + lampião móvel + fuga de ameaças + limite diário de produção por profissão.**
+**Minerador sem X-Ray → detecta entradas de cavernas grandes próximas → explora checkpoints internos sem repetir caminho → minera apenas o que realmente enxerga → considera a caverna esgotada quando não há mais caminhos úteis → deposita recursos e volta para sua casa/cama. Lampião corrigido para a orientação correta.**
 
 A próxima versão deve partir daqui.
