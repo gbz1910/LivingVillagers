@@ -43,6 +43,22 @@ jobs:
           base64 -d a25.patch.b64 > a25_patch.tar.gz
           tar -xzf a25_patch.tar.gz -C project/lv_stage22
           sed -i 's/mod_version=0.2.1-alpha.24/mod_version=0.2.1-alpha.25/' project/lv_stage22/gradle.properties
+      - name: Verify removed systems stay removed
+        shell: bash
+        run: |
+          if grep -R -n -E 'VILLAGE_CHEST|VILLAGE_KEY|village_chest|village_key|VillageChest|VillageKey' project/lv_stage22/src/main 2>/dev/null; then
+            echo "Village chest/key remnants found."
+            exit 1
+          fi
+          if grep -R -n -E 'raiseLumberjackWithDirt|finishCurrentLumberjackPillar|cleanupLumberjackScaffold|hasScaffoldBlocks|cutting_from_pillar|starting_dirt_pillar|climbing_dirt_pillar' project/lv_stage22/src/main/java 2>/dev/null; then
+            echo "Old lumberjack pillar logic still present."
+            exit 1
+          fi
+      - name: Upload reconstructed source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: LivingVillagers-alpha.25-source-snapshot
+          path: project/lv_stage22
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
