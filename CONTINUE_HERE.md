@@ -12,9 +12,9 @@
 - Java do build: **17**
 - Gradle usado no GitHub Actions: **8.8**
 - Mod ID: `livingvillagers`
-- Versão atual deste snapshot: **0.2.1-alpha.25**
-- Commit deste snapshot: `925fdddf4c018f682b3fbebea5006a160f5920fe`
-- Build alpha.25: **GitHub Actions concluído com sucesso**
+- Versão atual deste snapshot: **0.2.1-alpha.26**
+- Commit deste snapshot: `83a22f4046e059148080e99190e0373a2d5889a8`
+- Build alpha.26: **GitHub Actions concluído com sucesso**
 
 ## 2. Regra de trabalho
 
@@ -419,9 +419,11 @@ Continuar incrementando as alphas:
 - alpha.21 → novo sistema de configurações + tentativa de pilar;
 - alpha.22 → remoção total do Baú da Vila/Chave;
 - alpha.23 → tentativa final de estabilizar pilar;
-- alpha.24 → **pilares removidos e substituídos por corte inteligente de árvore conectada**.\n- alpha.25 → correção do travamento em `TRAVEL_TO_TASK`, recuperação automática de alvo e coleta de drops estabilizada.
+- alpha.24 → **pilares removidos e substituídos por corte inteligente de árvore conectada**.
+- alpha.25 → correção do travamento em `TRAVEL_TO_TASK`, recuperação automática de alvo e coleta de drops estabilizada.
+- alpha.26 → Minerador com exploração de cavernas sem X-Ray, linha de visão para minérios, lampião visível com iluminação móvel, fuga acelerada de Zombies/Pillagers e limites diários configuráveis por profissão.
 
-Ao criar a próxima build, continuar em **alpha.25**, salvo decisão explícita diferente.
+Ao criar a próxima build, continuar em **alpha.26**, salvo decisão explícita diferente.
 
 ## 20. Antes de responder em outro chat
 
@@ -452,10 +454,10 @@ Faça primeiro:
 
 ### Próximo ponto de continuação
 
-Estado atual: **alpha.25 compilada com sucesso**.
+Estado atual: **alpha.26 compilada com sucesso**.
 
 A mudança principal mais recente é:
 
-**Lenhador sem pilares → corte inteligente da árvore conectada + recuperação automática de TRAVEL_TO_TASK + coleta de drops pela base da árvore.**
+**Minerador sem X-Ray → exploração de cavernas alcançáveis + minérios apenas com linha de visão + lampião móvel + fuga de ameaças + limite diário de produção por profissão.**
 
 A próxima versão deve partir daqui.
