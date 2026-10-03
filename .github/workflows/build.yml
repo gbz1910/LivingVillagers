@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.25 travel recovery
+name: Build Living Villagers alpha.26 miner exploration
 
 on:
   workflow_dispatch:
@@ -43,6 +43,12 @@ jobs:
           base64 -d a25.patch.b64 > a25_patch.tar.gz
           tar -xzf a25_patch.tar.gz -C project/lv_stage22
           sed -i 's/mod_version=0.2.1-alpha.24/mod_version=0.2.1-alpha.25/' project/lv_stage22/gradle.properties
+      - name: Apply alpha.26 miner exploration overhaul
+        shell: bash
+        run: |
+          cat a26.part{00..05}.b64 > a26.patch.b64
+          base64 -d a26.patch.b64 > a26_patch.tar.gz
+          tar -xzf a26_patch.tar.gz -C project/lv_stage22
       - name: Verify removed systems stay removed
         shell: bash
         run: |
@@ -54,11 +60,6 @@ jobs:
             echo "Old lumberjack pillar logic still present."
             exit 1
           fi
-      - name: Upload reconstructed source snapshot
-        uses: actions/upload-artifact@v4
-        with:
-          name: LivingVillagers-alpha.25-source-snapshot
-          path: project/lv_stage22
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -69,5 +70,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.25
+          name: LivingVillagers-1.20.1-alpha.26
           path: project/lv_stage22/build/libs/*.jar
