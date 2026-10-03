@@ -1,0 +1,46 @@
+name: Export Living Villagers current source
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct alpha.18 project
+        shell: bash
+        run: |
+          cat a18.part{000..012}.b64 > a18.b64
+          base64 -d a18.b64 > project.zip
+          mkdir project
+          unzip -q project.zip -d project
+      - name: Apply alpha.19 fixes
+        shell: bash
+        run: |
+          sed -i 's/placed.sort(Comparator.comparingInt(BlockPos::getY).reversed());/placed.sort((a, b) -> Integer.compare(b.getY(), a.getY()));/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
+          cp patches/a19_LumberjackCompatibilityEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/LumberjackCompatibilityEvents.java
+      - name: Apply alpha.21 settings overhaul
+        shell: bash
+        run: |
+          cat a21.patch.part000.b64 a21.patch.part001.b64 > a21_patch.b64
+          base64 -d a21_patch.b64 > a21_patch.tar.gz
+          tar -xzf a21_patch.tar.gz -C project/lv_stage22
+      - name: Apply alpha.24 connected-tree rewrite
+        shell: bash
+        run: |
+          base64 -d a24.patch.b64 > a24_patch.tar.gz
+          tar -xzf a24_patch.tar.gz -C project/lv_stage22
+      - name: Apply alpha.25 travel recovery
+        shell: bash
+        run: |
+          base64 -d a25.patch.b64 > a25_patch.tar.gz
+          tar -xzf a25_patch.tar.gz -C project/lv_stage22
+          sed -i 's/mod_version=0.2.1-alpha.24/mod_version=0.2.1-alpha.25/' project/lv_stage22/gradle.properties
+      - name: Upload reconstructed source
+        uses: actions/upload-artifact@v4
+        with:
+          name: LivingVillagers-current-source
+          path: project/lv_stage22
