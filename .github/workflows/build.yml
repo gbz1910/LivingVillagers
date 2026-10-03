@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.26.1 cave exploration hotfix
+name: Build Living Villagers alpha.26.2 behavior settings hotfix
 
 on:
   workflow_dispatch:
@@ -55,6 +55,12 @@ jobs:
           cat a261.part{00..01}.b64 > a261.patch.b64
           base64 -d a261.patch.b64 > a261_patch.tar.gz
           tar -xzf a261_patch.tar.gz -C project/lv_stage22
+      - name: Apply alpha.26.2 behavior and settings hotfix
+        shell: bash
+        run: |
+          cat a262.part{00..03}.b64 > a262.patch.b64
+          base64 -d a262.patch.b64 > a262_patch.tar.gz
+          tar -xzf a262_patch.tar.gz -C project/lv_stage22
       - name: Remove obsolete Village Chest and Key translations
         shell: bash
         run: |
@@ -94,5 +100,5 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.26.1
+          name: LivingVillagers-1.20.1-alpha.26.2
           path: project/lv_stage22/build/libs/*.jar
