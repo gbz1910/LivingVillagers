@@ -1,4 +1,4 @@
-name: Build Living Villagers alpha.24 connected tree chopping
+name: Build Living Villagers alpha.25 travel recovery
 
 on:
   workflow_dispatch:
@@ -9,15 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
-
       - name: Reconstruct alpha.18 project
         shell: bash
         run: |
@@ -25,69 +21,37 @@ jobs:
           base64 -d a18.b64 > project.zip
           mkdir project
           unzip -q project.zip -d project
-
       - name: Apply alpha.19 fixes
         shell: bash
         run: |
           sed -i 's/placed.sort(Comparator.comparingInt(BlockPos::getY).reversed());/placed.sort((a, b) -> Integer.compare(b.getY(), a.getY()));/' project/lv_stage22/src/main/java/com/gb/livingvillagers/work/WorkerTaskExecutor.java
           cp patches/a19_LumberjackCompatibilityEvents.java project/lv_stage22/src/main/java/com/gb/livingvillagers/event/LumberjackCompatibilityEvents.java
-
       - name: Apply alpha.21 settings overhaul
         shell: bash
         run: |
           cat a21.patch.part000.b64 a21.patch.part001.b64 > a21_patch.b64
           base64 -d a21_patch.b64 > a21_patch.tar.gz
           tar -xzf a21_patch.tar.gz -C project/lv_stage22
-
       - name: Apply alpha.24 connected-tree rewrite
         shell: bash
         run: |
           base64 -d a24.patch.b64 > a24_patch.tar.gz
           tar -xzf a24_patch.tar.gz -C project/lv_stage22
-          sed -i 's/mod_version=0.2.1-alpha.21/mod_version=0.2.1-alpha.24/' project/lv_stage22/gradle.properties
-
-      - name: Remove old village chest translations
+      - name: Apply alpha.25 travel recovery
         shell: bash
         run: |
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          for name in ("pt_br.json", "en_us.json"):
-              p = Path("project/lv_stage22/src/main/resources/assets/livingvillagers/lang") / name
-              data = json.loads(p.read_text(encoding="utf-8"))
-              for key in (
-                  "block.livingvillagers.village_chest",
-                  "item.livingvillagers.village_key",
-                  "container.livingvillagers.village_chest",
-                  "message.livingvillagers.village_chest_locked",
-              ):
-                  data.pop(key, None)
-              p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-          PY
-
-      - name: Verify removed systems stay removed
-        shell: bash
-        run: |
-          if grep -R -n -E 'VILLAGE_CHEST|VILLAGE_KEY|village_chest|village_key|VillageChest|VillageKey' project/lv_stage22/src/main 2>/dev/null; then
-            echo "Village chest/key remnants found."
-            exit 1
-          fi
-          if grep -R -n -E 'raiseLumberjackWithDirt|finishCurrentLumberjackPillar|cleanupLumberjackScaffold|hasScaffoldBlocks|cutting_from_pillar|starting_dirt_pillar|climbing_dirt_pillar' project/lv_stage22/src/main/java 2>/dev/null; then
-            echo "Old lumberjack pillar logic still present."
-            exit 1
-          fi
-
+          base64 -d a25.patch.b64 > a25_patch.tar.gz
+          tar -xzf a25_patch.tar.gz -C project/lv_stage22
+          sed -i 's/mod_version=0.2.1-alpha.24/mod_version=0.2.1-alpha.25/' project/lv_stage22/gradle.properties
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.8'
-
       - name: Build Forge mod
         working-directory: project/lv_stage22
         run: gradle --no-daemon clean build
-
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: LivingVillagers-1.20.1-alpha.24
+          name: LivingVillagers-1.20.1-alpha.25
           path: project/lv_stage22/build/libs/*.jar
